@@ -161,19 +161,34 @@
 
             const namesContainer = $("#sonucteam");
             let names = [];
-            $("#nameInput").on("keypress", function () {
-                var keycode = event.keyCode || event.which;
-                if (keycode == '13') {
-                    const nameInput = $("#nameInput");
-                    const name = nameInput.val().trim();
-
-                    if (name !== "") {
-                        names.push(name);
-                        updateNamesContainer();
-                        nameInput.val("");
+            $("#nameInput").on("keyup", function (e) {
+                if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+                    // Check if the event is not triggered by a touch (mobile tap)
+                    if (!('ontouchstart' in window || navigator.msMaxTouchPoints)) {
+                        $('#nameInput').blur();
+                        const nameInput = $("#nameInput");
+                        const name = nameInput.val().trim();
+            
+                        if (name !== "") {
+                            names.push(name);
+                            updateNamesContainer();
+                            nameInput.val("");
+                        }
                     }
                 }
             });
+            
+            // Handle touch events for mobile devices
+            $("#nameInput").on("touchend", function () {
+                const nameInput = $("#nameInput");
+                const name = nameInput.val().trim();
+            
+                if (name !== "") {
+                    names.push(name);
+                    updateNamesContainer();
+                    nameInput.val("");
+                }
+            });            
             function updateNamesContainer() {
               namesContainer.html("");
               const nameList = $("<ul>").addClass("team-list");
